@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Excel to Web</title>
+</head>
+<body>
+  <h2>داده‌ها از Excel</h2>
+  <input type="file" id="fileInput">
+  <table border="1" id="dataTable">
+    <tr>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+  </table>
+
+  <script>
+    document.getElementById("fileInput").addEventListener("change", function(e){
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e){
+        const text = e.target.result;
+        const rows = text.split("\n").map(r => r.split(","));
+
+        const table = document.getElementById("dataTable");
+        table.innerHTML = "<tr><th>Name</th><th>Score</th></tr>"; // پاک کردن جدول قبلی
+        rows.forEach((row, index) => {
+          if (index === 0) return; // رد کردن هدر CSV
+          const tr = table.insertRow();
+          row.forEach(cell => tr.insertCell().innerText = cell.trim());
+        });
+      }
+      reader.readAsText(file);
+    });
+  </script>
+</body>
+</html>
